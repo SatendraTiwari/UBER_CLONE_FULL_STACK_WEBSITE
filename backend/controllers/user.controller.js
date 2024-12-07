@@ -4,7 +4,7 @@ const userService = require("../servicees/user.service");
 const userModel = require("../models/user.model");
 
 const {validationResult, cookie} = require('express-validator');
-const BlackListToken = require("../models/blackListToken.model");
+const BlackListTokenModel = require("../models/blackListToken.model");
 
 module.exports.registerUser = async (req, res, next) => {
 
@@ -15,6 +15,12 @@ module.exports.registerUser = async (req, res, next) => {
     }
 
     const {fullName, email, password} = req.body;
+
+    const isUserAlreadyExit = await userModel.findOne({email});
+
+    if(isUserAlreadyExit){
+        return res.status(400).json({error: "User already exist"})
+    }
 
     const hashPassword = await userModel.hashPassword(password)
 
@@ -90,7 +96,7 @@ module.exports.userProfile = async (req, res, next) => {
 
 module.exports.logoutUser = async (req, res,next ) => {
     const token = req.cookies.token || req.headers.authorization?.split(' ')[ 1 ]
-    await BlackListToken.create({token});
+    await BlackListTokenModel.create({token});
 
     res.clearCookie('token');
     res.status(200).json({
