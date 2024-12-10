@@ -1,28 +1,45 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext } from 'react'
+import { Link , useNavigate} from 'react-router-dom'
 import { useState } from 'react'
+import axios from 'axios'
+import { UserDataContext } from '../contexts/UserContext'
 
 const UserSignup = () => {
+
   const [email,setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName,setFirstName] = useState('');
   const [lastName,setLastName] = useState('');
+  const navigate = useNavigate();
 
-  const [userData, setUserData] = useState({});
+ const { user, setUser } = useContext(UserDataContext)
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
+
     e.preventDefault();
 
-    setUserData({
+    const newUser = {
       fullName : {
         firstName: firstName,
-        lastName: lastName
+        lastName: lastName,
       },
       email : email,
-      password : password
-    })
+      password : password,
+    };
 
-    console.log(userData);
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`,newUser);
+
+    if(response.status === 201){
+      const data = response.data;
+
+      console.log(data.user);
+    
+      setUser(data.user);
+      localStorage.setItem('token',data.token)
+      navigate('/home');
+      
+    }
+
     setEmail('');
     setFirstName('')
     setLastName('')
@@ -74,7 +91,7 @@ const UserSignup = () => {
             }}
             className='bg-[#eeeeee] mb-5 rounded px-4 py-2 border w-full text-lg [placeholder: text-base]' type="password" name="" id="" placeholder='password' />
 
-          <button className='bg-[#111111] text-white font-semibold mb-5 rouded px-4 py-2 w-full text-base placeholder:text-base'>Sign up</button>
+          <button className='bg-[#111111] text-white font-semibold mb-5 rouded px-4 py-2 w-full text-base placeholder:text-base'>Create Account</button>
         </form>
         <p className='text-center text-base'>New here? <Link to='/Login' className=' text-cyan-500 text-base '>Login </Link></p>
       </div>

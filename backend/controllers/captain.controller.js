@@ -22,7 +22,7 @@ module.exports.registerCaptain = async (req, res, next ) => {
 
     const hashPassword = await captainModel.hashPassword(password);
 
-    const user = await captainService.createCaptain({
+    const captain = await captainService.createCaptain({
         firstName : fullName.firstName,
         lastName : fullName.lastName,
         email,
@@ -34,16 +34,15 @@ module.exports.registerCaptain = async (req, res, next ) => {
     })
 
 
-    console.log(user);
 
-    const token = await user.generatAuthToken();
+    const token = await captain.generatAuthToken();
 
     res.cookie('token',token);
 
     res.status(201).json({
         token : token,
         message : "Captain is Register succcess fully",
-        data : user
+        captain : captain
     })
 
 }
@@ -71,10 +70,10 @@ module.exports.loginCaptain = async (req, res) => {
 
     res.cookie('token', token);
 
-    res.status(201).json({
+    res.status(200).json({
         token : token,
         mesaage : "Captain is Login successfully",
-        data : captain
+        captain : captain
     })
 }
 
@@ -84,7 +83,7 @@ module.exports.captainProfile = async (req, res) => {
         const captain = req.captain;
         res.status(200).json({
             message : "Captain Profile",
-            data : captain,
+            captain : captain,
         })
     } catch (error) {
         res.status(401).json({

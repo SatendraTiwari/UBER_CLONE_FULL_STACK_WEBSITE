@@ -1,6 +1,10 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 import { useState } from 'react'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+
+import { CaptainDataContext } from '../contexts/CaptainContext'
 
 const CaptainSignup = () => {
   const [email,setEmail] = useState('');
@@ -12,12 +16,13 @@ const CaptainSignup = () => {
   const [capacity,setCapacity] = useState( );
   const [vehicleType, setVehicleType] = useState('');
 
-  const [captainData, setCaptainData] = useState({});
+  const {captain, setCaptain} = React.useContext(CaptainDataContext); 
+  const navigate = useNavigate();
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
 
-    setCaptainData({
+    const newCaptain = {
       fullName : {
         firstName: firstName,
         lastName: lastName
@@ -30,9 +35,19 @@ const CaptainSignup = () => {
         capacity : capacity,
         vehicleType : vehicleType
       }
-    })
+    }
 
-    console.log(captainData);
+
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/register`,newCaptain)
+
+    if(response.status === 201){
+      const data = response.data
+      setCaptain(data.captain)
+      localStorage.setItem('token',data.token)
+      navigate('/captain-home')
+    }
+
+  
     setEmail('');
     setFirstName('')
     setLastName('')
@@ -108,7 +123,8 @@ const CaptainSignup = () => {
               }}
               className='bg-[#eeeeee] rounded px-4 py-2 border w-1/2 text-lg [placeholder: text-base]'
               placeholder='Plate Number' />
-              
+              </div>
+              <div className='flex gap-4 mb-5'>
               <input
               type="number"
               value={capacity}
@@ -118,14 +134,19 @@ const CaptainSignup = () => {
               className='bg-[#eeeeee] rounded px-4 py-2 border w-1/2 text-lg [placeholder: text-base]'
               placeholder='Setting Capacity' /> 
 
-              <input
-              type="text"
+              <select
+
               value={vehicleType}
               onChange={(e) => {
                 setVehicleType(e.target.value);
               }}
               className='bg-[#eeeeee] rounded px-4 py-2 border w-1/2 text-lg [placeholder: text-base]'
-              placeholder='vehicleType' />
+              placeholder='vehicleType'>
+                <option value="" disabled>Select Vahicle Type</option>
+                <option value="car">Car</option>
+                <option value="auto">Auto</option>
+                <option value="moto">Moto</option>
+              </select>
 
           </div>
 

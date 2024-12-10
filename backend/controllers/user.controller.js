@@ -34,9 +34,9 @@ module.exports.registerUser = async (req, res, next) => {
 
     const token = await user.generateAuthToken();
     console.log(token)
-    res.json({
+    res.status(201).json({
         token : token,
-        data : user,
+        user : user,
     })
 
 
@@ -57,7 +57,7 @@ module.exports.loginUser = async (req, res,next) => {
 
     if(!user){
         return res.status(501).json({
-            message : "invalid Email and password"
+            message : "invalid Email and password",
         })
     }
 
@@ -78,7 +78,7 @@ module.exports.loginUser = async (req, res,next) => {
     res.status(200).json({
         token : token,
         message : "user Login successfully ",
-        data: user,
+        user: user,
     })
 }
 
@@ -99,7 +99,8 @@ module.exports.logoutUser = async (req, res,next ) => {
     await BlackListTokenModel.create({token});
 
     res.clearCookie('token');
+    
     res.status(200).json({
-        message : " Successfully logout",
+        message : "User is Logout Successfully",
     })
 }
