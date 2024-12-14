@@ -2,6 +2,8 @@ import axios from 'axios';
 import React,{useEffect, useContext, useState} from 'react'
 import {useNavigate } from 'react-router-dom'
 import {CaptainDataContext} from '../contexts/CaptainContext'
+import Loader from '../components/Loader';
+
 const CaptainProtectedWrapper =({
     children
 }) => {
@@ -34,7 +36,7 @@ const CaptainProtectedWrapper =({
 
 
     if(loading){
-      return <div>Loading...</div>
+      return <Loader/>
     }
 
   return (
@@ -44,4 +46,4 @@ const CaptainProtectedWrapper =({
   )
 }
 
-export default CaptainProtectedWrapper        
+export default CaptainProtectedWrapper

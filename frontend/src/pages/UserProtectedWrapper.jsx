@@ -2,7 +2,9 @@ import React,{useContext, useEffect, useState} from 'react'
 import {useNavigate } from 'react-router-dom'
 import axios from 'axios';
 import { UserDataContext } from '../contexts/UserContext';
-const UserProtectedWrapper = ({
+import Loader from '../components/Loader';
+
+const  UserProtectedWrapper = ({
     children,
 }) => {
 
@@ -34,11 +36,11 @@ const UserProtectedWrapper = ({
       })
     },[token])
 
+  
+
     if(isLoading){
-      return <div className='text-3xl'>Loading......</div>
+      return <Loader />
     }
-
-
 
   return (
     <>

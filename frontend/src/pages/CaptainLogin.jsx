@@ -39,7 +39,7 @@ const CaptainLogin = () => {
     return (
         <div className='p-7 h-screen flex flex-col justify-between'>
             <div>
-                <img className='w-16 mb-10' src="https://www.svgrepo.com/show/505031/uber-driver.svg" alt="" />
+                <img className='w-16 mb-10' src="\public\uber-driver-logo.svg" alt="" />
 
                 <form onSubmit={(e) => {
                     submitHander(e);
